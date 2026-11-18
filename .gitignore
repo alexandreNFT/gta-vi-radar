@@ -1,0 +1,12 @@
+data/
+.env
+.env.*
+!.env.example
+x_bearer
+*.sqlite3*
+*.db*
+*.log
+*.pid
+__pycache__/
+*.pyc
+.DS_Store

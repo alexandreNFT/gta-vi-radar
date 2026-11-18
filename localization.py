@@ -1,0 +1,17 @@
+"""Translate interface metadata, preserving original source text."""
+LABELS = {'Voitures / véhicules': 'Cars / vehicles', 'Missions / histoire': 'Missions / story', 'Secrets / découvertes': 'Secrets / discoveries', 'Carte / lieux': 'Map / locations', 'Armes / combat': 'Weapons / combat', 'PNJ / bugs / physique': 'NPCs / bugs / physics', 'Personnages': 'Characters', 'Autres infos': 'Other news', 'Spéculation / fuite non confirmée': 'Speculation / unconfirmed leak', 'Nouveauté / information rapportée': 'New finding / reported news', 'Découverte': 'Discovery', 'Histoire': 'Story', 'Annonce': 'Announcement', 'Critique': 'Review', 'Information': 'News', 'Possible': 'Possible', 'Majeur': 'Major', 'Aucun détecté': 'None detected', 'Signalé par la source': 'Flagged by source', 'Sans spoiler selon la source': 'No spoilers according to source', 'Rapporté / non vérifié': 'Reported / unverified', 'Non confirmé': 'Unconfirmed', 'Contesté': 'Disputed', 'Source officielle': 'Official source', 'Gameplay ou histoire': 'Gameplay or story', 'Annonce ou changement majeur potentiel': 'Potential major announcement or change', 'Découverte potentielle': 'Potential discovery', 'Impact technique sur les joueurs': 'Technical impact on players', 'Évaluation du jeu': 'Game review', 'Incertitude ou spéculation : −15': 'Uncertainty or speculation: −15', 'Promotion ou bonus : −15': 'Promotion or bonus: −15', 'Discussion de forum : −5': 'Forum discussion: −5', 'Humour ou absurdité explicite': 'Explicit humour or absurdity', 'Situation propice aux clips et détournements': 'Potential for clips and remixes', 'Image ou situation insolite': 'Unusual image or situation', 'Personnages ou relations reconnaissables': 'Recognisable characters or relationships', 'Support visuel mentionné': 'Visual material mentioned', 'Citation potentiellement détournable': 'Potentially reusable quote', 'Pas de signal majeur détecté dans le titre': 'No major signal detected in the title', 'Pas de signal fort de détournement dans le titre': 'No strong meme signal detected in the title', 'Signal multi-sources': 'Multi-source signal', 'À surveiller': 'Watchlist'}
+PARTS = {'titre(s) proche(s) dans le radar': 'similar title(s) in the radar', 'date inconnue': 'unknown date', 'publication il y a': 'published', ' posts reçus ; recherche ouverte GTA VI toutes les 15 s': ' posts received; broad GTA VI search every 15 s', 'Clé API non configurée': 'API key not configured', 'Plafond local atteint (900 lectures réservées maximum)': 'Local budget reached (maximum 900 reserved reads)', 'Flux interrogé ; dates de sujet pour les forums': 'Feed checked; forum dates refer to topics', 'Inchangé (304)': 'Unchanged (304)', 'Échéance de 72 h atteinte ou arrêt manuel': '72-hour deadline reached or manually stopped', 'X — auteur ': 'X — author ', 'Collecteur': 'Collector', 'Flux trop volumineux': 'Feed too large'}
+def text(s):
+ if not isinstance(s,str):return s
+ if s in LABELS:return LABELS[s]
+ for a,b in PARTS.items():s=s.replace(a,b)
+ return s
+
+def localize(state):
+ for i in state['items']:
+  for k in ('source','category','spoiler','confidence','discovery_kind','exclusivity_reason'):i[k]=text(i.get(k))
+  for k in ('topics','news_reasons','meme_reasons'):i[k]=[text(x) for x in i.get(k,[])]
+ for h in state['sources']:
+  h['detail']=text(h['detail']);h['source']=text(h['source'])
+ for g in state.get('signals',[]):g['status']=text(g['status'])
+ return state
